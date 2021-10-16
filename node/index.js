@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const sequelize = require('./database/db');
-const producto = require('./database/models/producto');
+const Producto = require('./database/models/Producto');
 var cors = require('cors');
 
 
