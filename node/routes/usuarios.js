@@ -1,0 +1,68 @@
+const express = require('express');
+const router = express.Router();
+const usuario = require('../database/models/usuario');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+//Traer todos los usuarios de la base de datos
+router.get('/usuarios', (req, res) => {
+    usuario.findAll({
+        attributes: ['id', 'login', 'rol', 'estado', 'vendedor']
+    }).then(usuario => {
+        res.json(usuario);
+    })
+});
+
+//Traer los usuarios por el nombre o por el id
+router.get('/usuarios/:id', (req, res) => {
+    console.log("ID", req.params.id)
+    usuario.findAll({
+        attributes: ['id', 'login', 'rol', 'estado', 'vendedor'],
+        where: {
+            [Op.and]: [{
+                id: {
+                    [Op.like]: `%${req.params.id}%`
+                }
+            }]
+        }
+    }).then(usuarios => {
+        res.json(usuarios);
+    })
+});
+
+// Crear Usuario
+router.post('/usuarios', (req, res) => {
+    console.log('req', req.body);
+    usuario.create(
+        req.body
+    ).then(usuario => {
+        res.json(usuario);
+    })
+});
+
+// UPDATE /api/post/:id
+router.patch('/usuarios/:id', (req, res) => {
+    usuario.update({
+        login: req.body.login
+    }, {
+        where: {
+            id: req.params.id
+        }
+    }).then(result => {
+        res.json(result);
+    })
+});
+
+//DELETE /api/producto/:id
+router.delete('/usuarios/:id', (req, res) => {
+    usuario.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(result => {
+        res.json(result);
+    })
+});
+
+
+module.exports = router;

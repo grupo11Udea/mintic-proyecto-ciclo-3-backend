@@ -4,14 +4,10 @@ const sequelize = require('./database/db');
 const producto = require('./database/models/producto');
 var cors = require('cors');
 
-
-
-
-
 const hostname = '127.0.0.1';
 
 const port = 5000;
-
+const ip = "192.168.0.14"
 
 //middleWare
 app.use(express.urlencoded({extended: true}));
@@ -19,17 +15,15 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api', require('./routes/productos'));
+app.use('/api', require('./routes/usuarios'));
 
+app.listen(port, ip, ()=>{
 
-
-
-app.listen(port, ()=>{
-
-    console.log(`la api esta corriendo epor el puerto ${port}`);
+    console.log(`La API está corriendo en el puerto ${ip}:${port}`);
     sequelize.sync({force: false}).then(()=>{
-        console.log('nos hems conectado  la base de datos');
+        console.log('DB Connected!');
     }).catch((error)=>{
-        console.log('se ha producido un error', error);
+        console.log('An error has ocurred!', error);
     })
     
 })

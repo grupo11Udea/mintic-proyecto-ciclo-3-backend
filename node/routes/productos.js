@@ -8,7 +8,7 @@ const Op = Sequelize.Op;
 
 
 //Create Producto
-router.post('/',(req,res)=> {
+router.post('/productos',(req,res)=> {
     console.log('req', req.body);
     producto.create(
         req.body
@@ -19,7 +19,7 @@ router.post('/',(req,res)=> {
 
 
 //Traer todos los productos de la base de datos
-router.get('/',(req, res)=>{
+router.get('/productos',(req, res)=>{
 
     producto.findAll({
         attributes: ['id','nombre', 'descripcion', 'valor_unitario', 'estado','usuario' ]
@@ -31,7 +31,7 @@ router.get('/',(req, res)=>{
 
 
 //Traer los productos por el nombre o por el id
-router.get('/getByName/',(req, res)=>{
+router.get('/productos/getByName/',(req, res)=>{
     console.log(req.query.nombre)
     console.log(req.query.id)
     producto.findAll({
@@ -52,7 +52,7 @@ router.get('/getByName/',(req, res)=>{
 
 
 //READ /api/post/:id
-router.get('/:id',(req, res)=>{
+router.get('/productos/:id',(req, res)=>{
     producto.findByPk(req.params.id).then(productos=>{
         res.json(productos);
     })
@@ -60,7 +60,7 @@ router.get('/:id',(req, res)=>{
 
 //UPDATE /api/post/:id
 
-router.put('/:id',(req, res)=>{
+router.put('/productos/:id',(req, res)=>{
     producto.update({
         nombre: req.body.nombre
     },{
@@ -73,7 +73,7 @@ router.put('/:id',(req, res)=>{
 });
 
 //DELETE /api/producto/:id
-router.delete('/:id',(req, res)=>{
+router.delete('/productos/:id',(req, res)=>{
     producto.destroy({
         where:{
             id: req.params.id
