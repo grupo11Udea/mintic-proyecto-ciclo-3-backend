@@ -4,7 +4,6 @@ const sequelize = require('../db');
 class usuario extends Model{}
 
 usuario.init({
-    
     login:DataTypes.STRING,
     password:DataTypes.STRING,
     rol:DataTypes.INTEGER,
