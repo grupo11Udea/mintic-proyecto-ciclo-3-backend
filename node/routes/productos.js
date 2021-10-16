@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const producto = require('../database/models/producto');
+const Producto = require('../database/models/Producto');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 //Create Producto
 router.post('/productos',(req,res)=> {
     console.log('req', req.body);
-    producto.create(
+    Producto.create(
         req.body
     ).then(producto=>{
         res.json(producto);
@@ -21,8 +21,8 @@ router.post('/productos',(req,res)=> {
 //Traer todos los productos de la base de datos
 router.get('/productos',(req, res)=>{
 
-    producto.findAll({
-        attributes: ['id','nombre', 'descripcion', 'valor_unitario', 'estado','usuario' ]
+    Producto.findAll({
+        //attributes: ['id','nombre', 'descripcion', 'valor_unitario', 'estado','usuario' ]
     }).then(producto=>{
         res.json(producto);
     })
@@ -34,7 +34,7 @@ router.get('/productos',(req, res)=>{
 router.get('/productos/getByName/',(req, res)=>{
     console.log(req.query.nombre)
     console.log(req.query.id)
-    producto.findAll({
+    Producto.findAll({
         attributes: ['id','nombre','descripcion' ,'valor_unitario', 'estado','usuario' ],
         where: {
            [Op.and]:[{nombre: {
@@ -53,7 +53,7 @@ router.get('/productos/getByName/',(req, res)=>{
 
 //READ /api/post/:id
 router.get('/productos/:id',(req, res)=>{
-    producto.findByPk(req.params.id).then(productos=>{
+    Producto.findByPk(req.params.id).then(productos=>{
         res.json(productos);
     })
 });
@@ -61,8 +61,14 @@ router.get('/productos/:id',(req, res)=>{
 //UPDATE /api/post/:id
 
 router.put('/productos/:id',(req, res)=>{
-    producto.update({
-        nombre: req.body.nombre
+    console.log('respuesta',req.body)
+    Producto.update({
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        valor_unitario: req.body.valor_unitario,
+        estado: req.body.estado,
+        usuario: req.body.usuario
+        
     },{
         where: {
             id: req.params.id
@@ -74,7 +80,7 @@ router.put('/productos/:id',(req, res)=>{
 
 //DELETE /api/producto/:id
 router.delete('/productos/:id',(req, res)=>{
-    producto.destroy({
+    Producto.destroy({
         where:{
             id: req.params.id
         }
