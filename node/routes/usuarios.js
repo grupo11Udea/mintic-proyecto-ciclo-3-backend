@@ -43,7 +43,9 @@ router.post('/usuarios', (req, res) => {
 // UPDATE /api/post/:id
 router.patch('/usuarios/:id', (req, res) => {
     usuario.update({
-        login: req.body.login
+        login: req.body.login,
+        rol: req.body.rol,
+        estado: req.body.estado
     }, {
         where: {
             id: req.params.id
