@@ -13,6 +13,8 @@
 
 # misc
 .config.js
+/config.js
+/node/config.js
 .DS_Store
 .env.local
 .env.development.local
