@@ -3,13 +3,12 @@ DROP TABLE producto;
 DROP TABLE venta;
 DROP TABLE cliente;
 DROP TABLE usuario;
-DROP TABLE vendedor;
 DROP TABLE rol;
 DROP TABLE estado_usuario;
 DROP TABLE estado_venta;
-DROP DATABASE gestion_ventas;
-CREATE SCHEMA `gestion_ventas` ;
-USE gestion_ventas;
+DROP DATABASE gestion_ventas_5;
+CREATE SCHEMA `gestion_ventas_5` ;
+USE gestion_ventas_5;
 CREATE TABLE estado_venta(
     id int NOT NULL AUTO_INCREMENT,
     codigo varchar(20) NOT NULL,
@@ -31,25 +30,14 @@ CREATE TABLE rol(
     PRIMARY KEY (id)
 )ENGINE = InnoDB;
 
-CREATE TABLE vendedor(
-   numero_documento varchar(255) NOT NULL,
-   nombres varchar(255) NOT NULL,
-   apellidos varchar(255) NOT NULL,
-   PRIMARY KEY (numero_documento) 
-)ENGINE = InnoDB;
-
-
 CREATE TABLE usuario(
    id INT NOT NULL AUTO_INCREMENT,
    login varchar(50) NOT NULL,
-   password varchar(100) NOT NULL,
    rol int NOT NULL,
-   estado int NOT NULL,
-   vendedor varchar(255) NOT NULL,
+   id_estado int NOT NULL,
    PRIMARY KEY (id), 
-   FOREIGN KEY (estado) REFERENCES  estado_usuario(id),
-   FOREIGN KEY (rol) REFERENCES  rol(id), 
-   FOREIGN KEY (vendedor) REFERENCES  vendedor(numero_documento)	   
+   FOREIGN KEY (id_estado) REFERENCES  estado_usuario(id),
+   FOREIGN KEY (rol) REFERENCES  rol(id)    
 )ENGINE = InnoDB;
 
 CREATE TABLE cliente(
@@ -59,42 +47,51 @@ CREATE TABLE cliente(
    PRIMARY KEY (numero_documento)
 )ENGINE = InnoDB;
 
-
-
-
 CREATE TABLE venta(
-    identificador_unico int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     valor_total decimal(5,2) NOT NULL,
     identificador varchar(255),
     fecha DATETIME NOT NULL,
     estado int NULL,
     documento_cliente varchar(255) NOT NULL,
-    PRIMARY KEY (identificador_unico),
+    id_usuario int,
+    PRIMARY KEY (id),
     FOREIGN KEY (estado) REFERENCES estado_venta(id),
-    FOREIGN KEY (documento_cliente) REFERENCES cliente(numero_documento)
+    FOREIGN KEY (documento_cliente) REFERENCES cliente(numero_documento),
+FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 )ENGINE = InnoDB;
 
 CREATE TABLE producto(
-    identificador int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     nombre varchar(255) NOT NULL,
     valor_unitario DECIMAL(5,2) NOT NULL,
+    descripcion varchar(100) NOT NULL,	
     estado varchar(20) NOT NULL,
-    usuario int NOT NULL,
-    PRIMARY KEY (identificador),
-    FOREIGN KEY (usuario) REFERENCES usuario(id)
+   id_usuario int,
+    PRIMARY KEY (id),
+FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 )ENGINE = InnoDB;
 
 CREATE TABLE detalle_venta(
- id_detalle_venta int NOT NULL AUTO_INCREMENT,
+ id int NOT NULL AUTO_INCREMENT,
  cantidad int NOT NULL,
  precio_unitario decimal(5,2) NOT NULL,
  id_producto int NOT NULL,
  id_venta int NOT NULL,
  documento_vendedor 	varchar(255) NOT NULL,
- PRIMARY KEY (id_detalle_venta),
- FOREIGN KEY (id_producto) REFERENCES producto(identificador),
- FOREIGN KEY (id_venta) REFERENCES venta(identificador_unico),
- FOREIGN KEY (documento_vendedor) REFERENCES vendedor(numero_documento)
+ PRIMARY KEY (id),
+ FOREIGN KEY (id_producto) REFERENCES producto(id),
+ FOREIGN KEY (id_venta) REFERENCES venta(id)
 )ENGINE = InnoDB;
 
+INSERT INTO rol VALUES(1,'adm','Administrador');
+INSERT INTO rol VALUES(2,'ven','Vendedor');
 
+INSERT INTO estado_venta(id,codigo,descripcion)VALUES(1,'01','En proceso');
+INSERT INTO estado_venta(id,codigo,descripcion)VALUES(2,'02','Cancelada');
+INSERT INTO estado_venta(id,codigo,descripcion)VALUES(3,'02','Entregada');
+
+
+INSERT INTO estado_usuario VALUES(1,'pen','Pendiente');
+INSERT INTO estado_usuario VALUES(2,'aut','Autorizado');
+INSERT INTO estado_usuario VALUES(3,'noAut','No Autorizado');

@@ -1,14 +1,13 @@
 const {Model, DataTypes} = require('sequelize');
 const sequelize = require('../db');
+const rol = require('../models/rol');
+const estadoUsuario = require('../models/estadoUsuario')
 
 class usuario extends Model{}
 
 usuario.init({
-    login:DataTypes.STRING,
-    password:DataTypes.STRING,
-    rol:DataTypes.INTEGER,
-    estado:DataTypes.INTEGER,
-    vendedor:DataTypes.STRING
+    
+    login:DataTypes.STRING
    },{
        sequelize,
        modelName:"usuario",
@@ -16,4 +15,7 @@ usuario.init({
        tableName:'usuario' 
    });
    
-   module.exports = usuario;
+usuario.rol = usuario.belongsTo(rol,{foreignKey: 'id_rol', sourceKey: 'id_rol'});
+usuario.estadoUsuario = usuario.belongsTo(estadoUsuario,{foreignKey: 'id_estado', sourceKey: 'id'});
+
+module.exports = usuario;

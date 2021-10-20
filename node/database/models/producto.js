@@ -1,20 +1,21 @@
 const {Model, DataTypes} = require('sequelize');
 const sequelize = require('../db');
+const usuario = require('../models/usuario')
 
-class Producto extends Model{}
+class producto extends Model{}
 
-Producto.init({
+producto.init({
     
     nombre:DataTypes.STRING,
     descripcion:DataTypes.STRING,
     valor_unitario:DataTypes.DOUBLE,
-    estado:DataTypes.STRING,
-    usuario:DataTypes.INTEGER
+    estado:DataTypes.STRING
    },{
        sequelize,
-       modelName:"Producto",
+       modelName:"producto",
        timestamps: false,
        tableName:'producto' 
    });
    
-   module.exports = Producto;
+   module.exports = producto;
+   producto.usuario = producto.belongsTo(usuario,{foreignKey: 'id_usuario', sourceKey: 'id'});
