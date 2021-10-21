@@ -7,7 +7,7 @@ const Op = Sequelize.Op;
 //Traer todos los usuarios de la base de datos
 router.get('/usuarios', (req, res) => {
     usuario.findAll({
-        attributes: ['id', 'login', 'rol', 'estado', 'vendedor']
+        attributes: ['id', 'login', 'id_rol', 'id_estado']
     }).then(usuario => {
         res.json(usuario);
     })
@@ -63,6 +63,26 @@ router.delete('/usuarios/:id', (req, res) => {
         }
     }).then(result => {
         res.json(result);
+    })
+});
+
+//Traer los usuarios por el email
+router.get('/usuarios/getUsuarioByLogin/:login', (req, res) => {
+    console.log("ID", req.params.login)
+    usuario.findAll({
+        attributes: ['id', 'login', 'id_rol', 'id_estado'],
+        where: {
+            [Op.and]: [{
+                login: {
+                    [Op.like]: `%${req.params.login}%`
+                }
+            }]
+        }
+    }).then(usuarios => {
+        if(usuarios.length==0){
+            res.status(404);
+        }
+        res.json(usuarios);
     })
 });
 
